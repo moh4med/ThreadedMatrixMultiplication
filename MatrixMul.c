@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 int **a, **b, **c, **d, **e;
 int n, m, r;
-#define MAXSIZE 10
+#define MAXSIZE 100
 #define MAXELEMENT 5
 struct data {
 	int i;
@@ -114,13 +115,27 @@ void threadedMatMultPerRow() {
 }
 int main(void) {
 	initialize();
+	printf("%d %d %d\n",n,m,r);
+	clock_t t;
+	t = clock();
 	nonThreadedMatMult();
-	printMatrix(a, n, m);
+	t = clock() - t;
+	double time_taken1 = ((double) t) / CLOCKS_PER_SEC;
+	t = clock();
+	threadedMatMultPerElement();
+	t = clock() - t;
+	double time_taken2 = ((double) t) / CLOCKS_PER_SEC;
+	t = clock();
+	threadedMatMultPerRow();
+	t = clock() - t;
+	double time_taken3 = ((double) t) / CLOCKS_PER_SEC;
+	/*printMatrix(a, n, m);
 	printMatrix(b, m, r);
 	printMatrix(c, n, r);
-	threadedMatMultPerElement();
 	printMatrix(d, n, r);
-	threadedMatMultPerRow();
-	printMatrix(e, n, r);
+	printMatrix(e, n, r);*/
+	printf("nonthreaded took %f seconds to execute \n", time_taken1);
+	printf("threaded per element took %f seconds to execute \n", time_taken2);
+	printf("threaded per row took %f seconds to execute \n", time_taken3);
 	return EXIT_SUCCESS;
 }
